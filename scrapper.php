@@ -130,10 +130,6 @@ foreach(array(1419, 1434, 1240, 1259) as $i) {
 }
 
 
-#The participation rate threshold for which we will calculate the wasted votes.
-# 0.12 is the third of the partipation rate for the riding the lowest turnout (Fort McMurray) of the election with the lowest turnout (2008)
-$pRateThreshold = .12;
-
 
 $listOfParties  =array_keys($resultsByPartyByRiding);
 $listOfRidings 	=array_keys($resultsByRidingByParty);
@@ -218,7 +214,13 @@ uasort($resultsByRidingSummary, function ($a, $b) {
 });   
 
 foreach($resultsByRidingSummary as $ridingID => $ridingNumbers) {
-    printf("%-50s%.2f %%\n", $ridingNames[$ridingID], $ridingNumbers['wastedVotesPct']*100);
+    #The participation rate threshold for which we will calculate the wasted votes.
+    # 0.12 is the third of the partipation rate for the riding the lowest turnout (Fort McMurray) of the election with the lowest turnout (2008)
+    $pRateThreshold = .12;
+
+    if($ridingNumbers['pRate'] > $pRateThreshold) {
+        printf("%-50s%.2f %%\n", $ridingNames[$ridingID], $ridingNumbers['wastedVotesPct']*100);
+    }
 }
 
 
